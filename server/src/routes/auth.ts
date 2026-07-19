@@ -69,6 +69,8 @@ export const authRoutes: FastifyPluginAsync = async (app) => {
         p.intentions,
         p.interests,
         p.prompt_answer,
+        p.relationship_intention,
+        p.voice_intro_url,
         p.profile_complete,
         w.balance AS spark_balance,
         COALESCE(

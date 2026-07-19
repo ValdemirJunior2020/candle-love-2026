@@ -27,6 +27,12 @@ export default function ProfileScreen() {
     onPress: () => void;
   }[] = [
     {
+      icon: 'flame-outline',
+      title: 'Slow-Burn Journey',
+      subtitle: 'Compatibility, Voice Candle, reflections',
+      onPress: () => router.push('/intentional'),
+    },
+    {
       icon: 'create-outline',
       title: 'Edit profile',
       subtitle: `${photoStatus} · bio and interests`,

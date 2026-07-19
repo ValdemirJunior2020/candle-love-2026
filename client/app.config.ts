@@ -60,6 +60,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   plugins: [
     'expo-router',
     'expo-secure-store',
+    ['expo-audio', { microphonePermission: 'Allow Candle Love to record your 20-second Voice Candle.', enableBackgroundRecording: false, enableBackgroundPlayback: false }],
     [
       'expo-image-picker',
       {

@@ -19,6 +19,7 @@ const updateSchema = z.object({
   interests: z.array(z.string().trim().min(1).max(40)).max(10),
   promptAnswer: z.string().trim().max(300),
   intentions: z.enum(['relationship', 'friendship', 'unsure']),
+  relationshipIntention: z.enum(['marriage_minded','long_term','building_commitment','discovering','friendship_first']).default('long_term'),
 });
 
 const orderSchema = z.object({
@@ -384,9 +385,10 @@ export const profileRoutes: FastifyPluginAsync = async (app) => {
           interests = ${parsed.data.interests},
           prompt_answer = ${parsed.data.promptAnswer},
           intentions = ${parsed.data.intentions},
+          relationship_intention = ${parsed.data.relationshipIntention},
           last_active_at = NOW()
         WHERE user_id = ${userId}
-        RETURNING bio, city, interests, prompt_answer, intentions
+        RETURNING bio, city, interests, prompt_answer, intentions, relationship_intention
       `;
 
       const completion = await recalculateProfileCompletion(tx, userId);

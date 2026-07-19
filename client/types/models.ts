@@ -20,6 +20,8 @@ export type User = {
   intentions?: 'relationship' | 'friendship' | 'unsure';
   interests?: string[];
   promptAnswer?: string;
+  relationshipIntention?: 'marriage_minded' | 'long_term' | 'building_commitment' | 'discovering' | 'friendship_first';
+  voiceIntroUrl?: string | null;
   profileComplete?: boolean;
   sparkBalance?: number;
 };
@@ -35,6 +37,10 @@ export type Profile = {
   interests: string[];
   verified: boolean;
   promptAnswer: string;
+  relationshipIntention?: 'marriage_minded' | 'long_term' | 'building_commitment' | 'discovering' | 'friendship_first';
+  voiceIntroUrl?: string | null;
+  compatibilityReasons?: string[];
+  compatibilityScore?: number;
 };
 
 export type Match = {
@@ -49,6 +55,9 @@ export type Match = {
   photos?: ProfilePhoto[];
   bio: string;
   messageCount: number;
+  journeyStage?: 'spark' | 'glow' | 'flame' | 'ready_to_meet' | 'date_planned';
+  relationshipIntention?: string;
+  voiceIntroUrl?: string | null;
 };
 
 export type ChatMessage = {

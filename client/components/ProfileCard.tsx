@@ -136,6 +136,25 @@ export function ProfileCard({ profile }: { profile: Profile }) {
         </View>
       </View>
 
+      <View style={styles.compatibility}>
+        <View style={styles.compatibilityHeader}>
+          <Text style={styles.compatibilityTitle}>Why this person?</Text>
+          <Text style={styles.compatibilityScore}>{profile.compatibilityScore ?? 78}% aligned</Text>
+        </View>
+        {(profile.compatibilityReasons ?? []).map((reason) => (
+          <View key={reason} style={styles.reasonRow}>
+            <Ionicons name="checkmark-circle" size={15} color={colors.green} />
+            <Text style={styles.reasonText}>{reason}</Text>
+          </View>
+        ))}
+        {profile.voiceIntroUrl ? (
+          <View style={styles.voiceBadge}>
+            <Ionicons name="mic" size={15} color={colors.goldBright} />
+            <Text style={styles.voiceText}>Voice Candle available</Text>
+          </View>
+        ) : null}
+      </View>
+
       <View style={styles.prompt}>
         <Ionicons name="sparkles" size={16} color={colors.gold} />
         <View style={styles.promptCopy}>
@@ -232,6 +251,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(20,10,5,.72)',
   },
   tagText: { color: colors.cream, fontSize: 12 },
+  compatibility: { padding: 16, gap: 8, backgroundColor: '#18100B', borderTopWidth: 1, borderTopColor: colors.borderSoft },
+  compatibilityHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  compatibilityTitle: { color: colors.text, fontWeight: '900', fontSize: 15 },
+  compatibilityScore: { color: colors.goldBright, fontWeight: '900', fontSize: 12 },
+  reasonRow: { flexDirection: 'row', gap: 7, alignItems: 'center' },
+  reasonText: { color: colors.cream, flex: 1, fontSize: 12, lineHeight: 18 },
+  voiceBadge: { alignSelf: 'flex-start', flexDirection: 'row', gap: 6, alignItems: 'center', borderWidth: 1, borderColor: colors.goldDark, borderRadius: radius.pill, paddingHorizontal: 10, paddingVertical: 6 },
+  voiceText: { color: colors.goldBright, fontSize: 11, fontWeight: '800' },
   prompt: {
     flexDirection: 'row',
     gap: 10,

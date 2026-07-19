@@ -1,8 +1,8 @@
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 
-import { AuthProvider } from '@/context/AuthContext';
 import { colors } from '@/constants/theme';
+import { AuthProvider } from '@/context/AuthContext';
 
 export default function RootLayout() {
   return (
@@ -24,68 +24,38 @@ export default function RootLayout() {
           },
         }}
       >
-        <Stack.Screen
-          name="index"
-          options={{
-            headerShown: false,
-          }}
-        />
-
-        <Stack.Screen
-          name="(auth)"
-          options={{
-            headerShown: false,
-          }}
-        />
-
-        <Stack.Screen
-          name="(tabs)"
-          options={{
-            headerShown: false,
-          }}
-        />
+        <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
 
         <Stack.Screen
           name="messages/[conversationId]"
-          options={{
-            title: 'Conversation',
-            presentation: 'card',
-          }}
+          options={{ title: 'Conversation', presentation: 'card' }}
         />
 
-        <Stack.Screen
-          name="wallet"
-          options={{
-            title: 'Spark Wallet',
-          }}
-        />
+        <Stack.Screen name="wallet" options={{ title: 'Spark Wallet' }} />
+        <Stack.Screen name="profile/edit" options={{ title: 'Edit Profile' }} />
+        <Stack.Screen name="safety" options={{ title: 'Safety Center' }} />
+        <Stack.Screen name="settings" options={{ title: 'Privacy & Account' }} />
+        <Stack.Screen name="privacy" options={{ title: 'Privacy Policy' }} />
 
         <Stack.Screen
-          name="profile/edit"
-          options={{
-            title: 'Edit Profile',
-          }}
+          name="intentional"
+          options={{ title: 'Slow-Burn Journey' }}
         />
-
         <Stack.Screen
-          name="safety"
-          options={{
-            title: 'Safety Center',
-          }}
+          name="compatibility"
+          options={{ title: 'Compatibility Compass' }}
         />
-
+        <Stack.Screen name="voice-intro" options={{ title: 'Voice Candle' }} />
         <Stack.Screen
-          name="settings"
-          options={{
-            title: 'Privacy & Account',
-          }}
+          name="reflection"
+          options={{ title: 'Weekly Reflection' }}
         />
-
+        <Stack.Screen name="safe-date" options={{ title: 'Candle Check-In' }} />
         <Stack.Screen
-          name="privacy"
-          options={{
-            title: 'Privacy Policy',
-          }}
+          name="connection/[conversationId]"
+          options={{ title: 'Connection Journey' }}
         />
       </Stack>
     </AuthProvider>

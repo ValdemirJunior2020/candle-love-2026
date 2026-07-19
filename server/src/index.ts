@@ -16,6 +16,7 @@ import { discoveryRoutes } from './routes/discovery.js';
 import { safetyRoutes } from './routes/safety.js';
 import { profileRoutes } from './routes/profile.js';
 import { walletRoutes } from './routes/wallet.js';
+import { intentionalRoutes } from './routes/intentional.js';
 import { setRealtimeServer } from './realtime.js';
 import { verifyAccessToken } from './services/auth.js';
 
@@ -124,6 +125,7 @@ app.register(chatRoutes, { prefix: '/api/conversations' });
 app.register(walletRoutes, { prefix: '/api/wallet' });
 app.register(safetyRoutes, { prefix: '/api/safety' });
 app.register(profileRoutes, { prefix: '/api/profile' });
+app.register(intentionalRoutes, { prefix: '/api/intentional' });
 
 const io = new SocketServer(app.server, {
   cors: { origin: allowedOrigins, credentials: true },
