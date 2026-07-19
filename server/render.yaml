@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: candle-love-api
+    runtime: node
+    rootDir: server
+    buildCommand: npm ci && npm run build
+    startCommand: npm run start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: DATABASE_SSL
+        value: true
+      - key: DATABASE_URL
+        sync: false
+      - key: SERVER_URL
+        sync: false
+      - key: CORS_ALLOWED_ORIGINS
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: REVENUECAT_WEBHOOK_SECRET
+        sync: false

@@ -1,0 +1,5 @@
+import { Redirect, Tabs } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import { colors } from '@/constants/theme';
+import { useAuth } from '@/context/AuthContext';
+export default function TabsLayout() { const { user, loading } = useAuth(); if (!loading && !user) return <Redirect href="/(auth)/login"/>; return <Tabs screenOptions={({ route }) => ({ headerShown: false, tabBarActiveTintColor: colors.gold, tabBarInactiveTintColor: '#7D7169', tabBarStyle: { backgroundColor: '#0D0806', borderTopColor: colors.borderSoft, height: 74, paddingTop: 7, paddingBottom: 10 }, tabBarLabelStyle: { fontSize: 11 }, tabBarIcon: ({ color, size }) => { const map: Record<string, keyof typeof Ionicons.glyphMap> = { discover: 'flame', matches: 'heart-half', messages: 'chatbubble-ellipses', profile: 'person' }; return <Ionicons name={map[route.name] || 'ellipse'} size={size} color={color}/>; } })}><Tabs.Screen name="discover" options={{ title: 'Discover' }}/><Tabs.Screen name="matches" options={{ title: 'Matches' }}/><Tabs.Screen name="messages" options={{ title: 'Messages' }}/><Tabs.Screen name="profile" options={{ title: 'Profile' }}/></Tabs>; }

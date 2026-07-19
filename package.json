@@ -1,0 +1,27 @@
+{
+  "name": "candle-love",
+  "version": "3.0.0",
+  "private": true,
+  "scripts": {
+    "setup": "npm install --prefix server && npm install --prefix client",
+    "dev": "node scripts/dev.mjs",
+    "web": "npm --prefix client run web",
+    "build": "npm --prefix server run build",
+    "lint": "npm --prefix server run lint && npm --prefix client run lint",
+    "typecheck": "npm --prefix server run typecheck && npm --prefix client run typecheck",
+    "test": "npm --prefix server run test",
+    "doctor": "npm --prefix client run doctor",
+    "db:migrate": "npm --prefix server run db:migrate",
+    "db:seed": "npm --prefix server run db:seed",
+    "postinstall": "npm install --prefix server && npm install --prefix client",
+    "docker:up": "powershell -ExecutionPolicy Bypass -File scripts/docker-start.ps1",
+    "docker:down": "powershell -ExecutionPolicy Bypass -File scripts/docker-stop.ps1",
+    "docker:status": "powershell -ExecutionPolicy Bypass -File scripts/docker-status.ps1",
+    "docker:seed": "powershell -ExecutionPolicy Bypass -File scripts/docker-seed.ps1",
+    "docker:backup": "powershell -ExecutionPolicy Bypass -File scripts/docker-backup.ps1",
+    "docker:restore": "powershell -ExecutionPolicy Bypass -File scripts/docker-restore.ps1"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}

@@ -1,0 +1,7 @@
+import { ActivityIndicator, Pressable, StyleSheet, Text, type PressableProps, type StyleProp, type ViewStyle } from 'react-native';
+import { colors, radius } from '@/constants/theme';
+type Props = Omit<PressableProps, 'style'> & { title: string; loading?: boolean; kind?: 'primary' | 'secondary' | 'danger'; style?: StyleProp<ViewStyle> };
+export function AppButton({ title, loading, kind = 'primary', disabled, style, ...props }: Props) {
+  return <Pressable accessibilityRole="button" disabled={disabled || loading} style={({ pressed }) => [styles.base, styles[kind], pressed && styles.pressed, (disabled || loading) && styles.disabled, style]} {...props}>{loading ? <ActivityIndicator color={kind === 'primary' ? '#1A0D05' : colors.text}/> : <Text style={[styles.text, kind === 'primary' && styles.primaryText]}>{title}</Text>}</Pressable>;
+}
+const styles = StyleSheet.create({ base: { minHeight: 52, borderRadius: radius.pill, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 20, borderWidth: 1 }, primary: { backgroundColor: colors.gold, borderColor: colors.goldBright }, secondary: { backgroundColor: colors.surfaceAlt, borderColor: colors.border }, danger: { backgroundColor: colors.redBg, borderColor: colors.red }, text: { color: colors.text, fontWeight: '800', fontSize: 16 }, primaryText: { color: '#1A0D05' }, pressed: { opacity: 0.78, transform: [{ scale: 0.99 }] }, disabled: { opacity: 0.5 } });

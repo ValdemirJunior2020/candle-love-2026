@@ -1,0 +1,146 @@
+name: candle-love
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: candle-love-postgres
+    restart: always
+    env_file:
+      - .env
+    ports:
+      # Database access is limited to this Windows computer.
+      # Do not forward port 5432 through your router.
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - candle-love-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    networks:
+      - candle-love-private
+
+  migrate:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    image: candle-love-server:local
+    container_name: candle-love-migrate
+    restart: "no"
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      PORT: 5000
+      UPLOAD_DIR: /app/uploads
+    command: ["node", "dist/migrate.js"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - candle-love-private
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    image: candle-love-server:local
+    container_name: candle-love-server
+    restart: always
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      PORT: 5000
+      UPLOAD_DIR: /app/uploads
+    ports:
+      - "5000:5000"
+    volumes:
+      - candle-love-uploads:/app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:5000/api/ready').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    networks:
+      - candle-love-private
+
+  backup:
+    image: postgres:17-alpine
+    container_name: candle-love-backup
+    restart: always
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./backups:/backups
+      - candle-love-uploads:/uploads:ro
+    command:
+      - /bin/sh
+      - -c
+      - |
+        set -eu
+        while true; do
+          FILE="/backups/candle_love_$$(date -u +%Y-%m-%dT%H-%M-%SZ).sql.gz"
+          echo "Creating database backup: $$FILE"
+          PGPASSWORD="$${POSTGRES_PASSWORD}" pg_dump \
+            --host=postgres \
+            --username="$${POSTGRES_USER}" \
+            --dbname="$${POSTGRES_DB}" \
+            --no-owner \
+            --no-privileges | gzip > "$$FILE"
+          UPLOAD_FILE="/backups/candle_love_uploads_$$(date -u +%Y-%m-%dT%H-%M-%SZ).tar.gz"
+          echo "Creating photo backup: $$UPLOAD_FILE"
+          tar -czf "$$UPLOAD_FILE" -C /uploads .
+          find /backups -type f -name 'candle_love_*.sql.gz' -mtime +14 -delete
+          find /backups -type f -name 'candle_love_uploads_*.tar.gz' -mtime +14 -delete
+          sleep 86400
+        done
+    networks:
+      - candle-love-private
+
+  # Optional: gives the iOS app a stable public HTTPS URL without exposing
+  # PostgreSQL or opening inbound router ports. Create the tunnel in Cloudflare
+  # and set CLOUDFLARE_TUNNEL_TOKEN in .env before enabling this profile.
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: candle-love-cloudflared
+    restart: always
+    profiles: ["public"]
+    env_file:
+      - .env
+    environment:
+      TUNNEL_TOKEN: ${CLOUDFLARE_TUNNEL_TOKEN}
+    command: ["tunnel", "--no-autoupdate", "run"]
+    depends_on:
+      server:
+        condition: service_healthy
+    networks:
+      - candle-love-private
+
+volumes:
+  candle-love-postgres-data:
+    name: candle-love-postgres-data
+  candle-love-uploads:
+    name: candle-love-uploads
+
+networks:
+  candle-love-private:
+    name: candle-love-private
+    driver: bridge
