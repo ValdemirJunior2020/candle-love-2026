@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { router } from 'expo-router';
 import {
   Linking,
+  Platform,
   StyleSheet,
   Text,
   View,
@@ -30,24 +31,29 @@ export default function SettingsScreen() {
   const openTerms = async () => {
     await Linking.openURL(appConfig.termsUrl);
   };
+const openSupport = async () => {
+  const email = appConfig.supportEmail || 'INFOJR.8@GMAIL.COM';
+  const subject = encodeURIComponent('Candle Love Support Request');
+  const body = encodeURIComponent(
+    'Hello Candle Love Support,\n\nI need help with:\n\n',
+  );
 
-  const openSupport = async () => {
-    const subject = encodeURIComponent(
-      'Candle Love Support Request',
-    );
+  if (Platform.OS === 'web') {
+    const gmailUrl =
+      `https://mail.google.com/mail/?view=cm&fs=1` +
+      `&to=${encodeURIComponent(email)}` +
+      `&su=${subject}` +
+      `&body=${body}`;
 
-    const emailUrl =
-      `mailto:${appConfig.supportEmail}?subject=${subject}`;
+    await Linking.openURL(gmailUrl);
+    return;
+  }
 
-    const supported = await Linking.canOpenURL(emailUrl);
+  const mailUrl =
+    `mailto:${email}?subject=${subject}&body=${body}`;
 
-    if (supported) {
-      await Linking.openURL(emailUrl);
-      return;
-    }
-
-    await Linking.openURL(appConfig.supportUrl);
-  };
+  await Linking.openURL(mailUrl);
+};
 
   const remove = async () => {
     if (deleting) {
