@@ -56,6 +56,11 @@ if (!parsed.success) {
 }
 
 export const config = parsed.data;
+
+export const allowedOrigins = config.CORS_ALLOWED_ORIGINS
+  .split(',')
+  .map((origin: string) => origin.trim().replace(/\/+$/, ''))
+  .filter((origin: string) => origin.length > 0);
 export const isProduction = config.NODE_ENV === 'production';
 export const allowedOriginPatterns = config.CORS_ALLOWED_ORIGINS.split(',')
   .map((value) => value.trim().replace(/\/$/, ''))
