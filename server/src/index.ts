@@ -8,7 +8,7 @@ import rateLimit from '@fastify/rate-limit';
 import staticFiles from '@fastify/static';
 import rawBody from 'fastify-raw-body';
 import { Server as SocketServer } from 'socket.io';
-import { allowedOrigins, config } from './config.js';
+import { config, isOriginAllowed } from './config.js';
 import { sql } from './db.js';
 import { authRoutes } from './routes/auth.js';
 import { chatRoutes } from './routes/chat.js';
@@ -28,10 +28,8 @@ const app = Fastify({
   bodyLimit: (config.MAX_PROFILE_PHOTO_MB + 1) * 1024 * 1024,
 });
 
-const originAllowed = (origin?: string) => !origin || allowedOrigins.includes(origin);
-
 await app.register(cors, {
-  origin: (origin, callback) => callback(null, originAllowed(origin)),
+  origin: (origin, callback) => callback(null, isOriginAllowed(origin)),
   credentials: true,
   methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
 });
@@ -76,7 +74,7 @@ app.addHook('onRequest', async (request, reply) => {
   }
 
   const origin = request.headers.origin;
-  if (origin && !originAllowed(origin)) {
+  if (origin && !isOriginAllowed(origin)) {
     return reply.code(403).send({ error: 'INVALID_ORIGIN' });
   }
 });
@@ -128,7 +126,10 @@ app.register(profileRoutes, { prefix: '/api/profile' });
 app.register(intentionalRoutes, { prefix: '/api/intentional' });
 
 const io = new SocketServer(app.server, {
-  cors: { origin: allowedOrigins, credentials: true },
+  cors: {
+    origin: (origin, callback) => callback(null, isOriginAllowed(origin)),
+    credentials: true,
+  },
 });
 
 io.use(async (socket, next) => {

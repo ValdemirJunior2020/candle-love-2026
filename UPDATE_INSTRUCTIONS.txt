@@ -1,0 +1,9 @@
+CANDLE LOVE — RENDER + NETLIFY UPDATE
+
+1. Copy everything inside this Candle-Love-Expo folder into your existing Candle-Love-Expo project folder.
+2. Allow Windows to merge folders and replace matching files.
+3. Do not copy or replace your local .env, client/.env, logo, privacy page, settings page, database volumes, or uploads.
+4. Commit the changed files to GitHub.
+5. Follow docs/RENDER_NETLIFY_DEPLOYMENT.md.
+
+This patch does not delete or reset the local Docker database.

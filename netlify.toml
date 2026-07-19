@@ -1,0 +1,28 @@
+[build]
+  base = "client"
+  command = "npm ci --no-audit --no-fund && npm run build:web"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+  NPM_CONFIG_REGISTRY = "https://registry.npmjs.org/"
+  EXPO_PUBLIC_APP_ENV = "production"
+
+[context.deploy-preview.environment]
+  EXPO_PUBLIC_APP_ENV = "preview"
+
+[context.branch-deploy.environment]
+  EXPO_PUBLIC_APP_ENV = "preview"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(self), microphone=(self), geolocation=()"

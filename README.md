@@ -349,5 +349,13 @@ The app does not request microphone, camera, location, contacts, tracking, Bluet
 ## Multi-photo profiles
 
 Profile galleries now support 2 required, 4 recommended, and 6 maximum photos. Uploaded files live in the persistent `candle-love-uploads` Docker volume while PostgreSQL stores ordering and metadata. See `docs/MULTI_PHOTO_PROFILES.md` for startup, migration, backup, and restore instructions.
-#   c a n d l e - l o v e - 2 0 2 6  
- 
+
+## Render API and Netlify web deployment
+
+The repository includes production deployment configuration:
+
+- `render.yaml` provisions the Fastify API, Render Postgres, migrations, and persistent media storage.
+- `netlify.toml` exports and deploys the Expo web app from `client/`.
+- `docs/RENDER_NETLIFY_DEPLOYMENT.md` contains the complete setup, CORS, testing, and optional data-migration instructions.
+
+Local Docker remains available for development and local backups. Netlify and Render use their own environment variables, so local `.env` files remain private and unchanged.

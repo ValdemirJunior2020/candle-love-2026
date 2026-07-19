@@ -12,7 +12,9 @@
     "lint": "expo lint",
     "typecheck": "tsc --noEmit",
     "doctor": "expo-doctor",
-    "config:public": "expo config --type public"
+    "config:public": "expo config --type public",
+    "build:web": "expo export --platform web",
+    "preview:web": "npx serve dist"
   },
   "dependencies": {
     "@expo-google-fonts/great-vibes": "^0.4.1",
